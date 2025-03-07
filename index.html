@@ -1,58 +1,123 @@
-<!-- Inside the launcher HTML, after loading the game -->
-<script>
-  // Check if the game is loaded
-  const checkGameLoaded = setInterval(() => {
-    if (window.Game || window.Unity) { // Assuming the game object or Unity is available globally
-      clearInterval(checkGameLoaded);
-      injectMods();  // Run the mod injection after the game is loaded
-    }
-  }, 1000);
+<html data-theme="dark">
+  <head>
+    <title>BuildNow GG</title>
+    <link rel="stylesheet" href="game-loader/gameloader2020.css" />
+    <script src="game-loader/gameloader2020.js"></script>
+    <script src="game-loader/gameloader-helper.js"></script>
+    <link href="style/daisyui.min.css" rel="stylesheet" type="text/css" />
+    <link href="style/fontawesome.min.css" rel="stylesheet" type="text/css" />
+    <script src="scripts/tailwindcss.js"></script>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <body>
+    <div class="game">
+      <div id="game-container">
+        <canvas id="canvas"></canvas>
+      </div>
 
-  // Function to inject mods into the game
-  function injectMods() {
-    // Create mod menu
-    let modMenu = document.createElement("div");
-    modMenu.style.position = "fixed";
-    modMenu.style.top = "10px";
-    modMenu.style.right = "10px";
-    modMenu.style.background = "rgba(0, 0, 0, 0.8)";
-    modMenu.style.color = "white";
-    modMenu.style.padding = "10px";
-    modMenu.style.borderRadius = "5px";
-    modMenu.style.zIndex = "1000";
-    modMenu.innerHTML = `
-      <h3 style="margin: 0 0 10px; text-align: center;">Mod Menu</h3>
-      <button id="aimbotButton" style="display: block; width: 100%; margin-bottom: 5px;">Aimbot</button>
-      <button id="flyButton" style="display: block; width: 100%; margin-bottom: 5px;">Fly</button>
-      <button id="espButton" style="display: block; width: 100%; margin-bottom: 5px;">ESP</button>
-    `;
-    document.body.appendChild(modMenu);
+      <div id="loadingBlock">
+        <!-- Loading screen area (fuzzy start) -->
+        <div class="jss1 flex items-center justify-center bg-base-100 text-base-content">
+          <div class="items-center justify-center gap-10 bg-base-200 p-5 rounded-xl shadow-md">
+            <!-- Loader Logo -->
+            <div class="flex btn btn-ghost text-3xl bg-base-100">
+              <span class="text-success">BUILD</span>
+              <span class="text-info">NOW</span>
+              <span class="text-primary">GG</span>
+            </div>
 
-    // Example: Add Aimbot functionality
-    document.getElementById("aimbotButton").addEventListener("click", function() {
-      // Add aimbot logic here, such as modifying the player's aim
-      if (window.Game) { // Example: Check if the game is accessible
-        console.log("Aimbot Activated");
-        // Example logic to hook into the game aiming (this depends on how the game is structured)
-        window.Game.player.aimAtNearestPlayer();  // Hypothetical function call to aim at the nearest player
-      }
-    });
+            <!-- Loading Status -->
+            <div class="flex flex-col items-center justify-center mt-6">
+              <div class="gameloader-progressbar invisible">
+                <div class="gameloader-progressbar-progress" style="width: 100%"></div>
+              </div>
+              <progress id="loadingBar" class="progress w-56" value="100" max="100"></progress>
+              <div id="loadingText" class="gameloader-progress-info neutral-content mt-4">Game Loading...</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    // Add Fly functionality
-    document.getElementById("flyButton").addEventListener("click", function() {
-      // Example: Implement fly mode
-      if (window.Game) {
-        console.log("Fly Mode Activated");
-        window.Game.player.isFlying = true; // Hypothetical way to set fly mode
-      }
-    });
+      <!-- Bottom Bar -->
+      <div class="bg-base-200 z-0 absolute bottom-0 left-0 right-0 h-[60px] select-none box-content">
+        <div class="flex justify-between items-center h-full w-full">
+          <!-- Bar logo -->
+          <div class="flex btn btn-ghost text-1xl">
+            <span class="text-success">BUILD</span>
+            <span class="text-info">NOW</span>
+            <span class="text-primary">GG</span>
+          </div>
 
-    // Add ESP functionality (show players through walls)
-    document.getElementById("espButton").addEventListener("click", function() {
-      if (window.Game) {
-        console.log("ESP Activated");
-        window.Game.player.showPlayersThroughWalls = true; // Hypothetical function to show players
-      }
-    });
-  }
-</script>
+          <!-- Bar icons -->
+          <div class="flex space-x-4 ml-auto mr-4 rounded-xl">
+            <button id="otherGamesButton" class="btn btn-ghost">
+              <i class="fa-solid fa-gamepad"></i>
+            </button>
+            <button id="themeButton" class="btn btn-ghost">
+              <i id="lightIcon" class="fa-solid fa-sun fill-current hidden"></i>
+              <i id="darkIcon" class="fa-solid fa-moon fill-current"></i>
+            </button>
+            <button id="fullScreenButton" class="btn btn-ghost" aria-label="Toggle fullscreen">
+              <i class="fa-solid fa-expand"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hidden Jaz -->
+      <div id="game-footer-logo-url" class="invisible"></div>
+      <div id="game-footer-more-url" class="invisible"></div>
+      <div class="gameloader-game-name invisible"></div>
+    </div>
+
+    <!-- Mod Menu Section -->
+    <div id="modMenu" style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.6); padding: 10px; border-radius: 10px; z-index: 10000;">
+      <button id="aimbotToggle" class="btn btn-ghost text-white">Aimbot</button>
+      <button id="flyToggle" class="btn btn-ghost text-white">Fly</button>
+      <button id="espToggle" class="btn btn-ghost text-white">ESP</button>
+    </div>
+
+    <script src="scripts/index.js"></script>
+    <script type="text/javascript">
+      var options = {
+        author: "Vseigru, cloudirector",
+        gameName: "BuildNow GG",
+        locale: "en_US",
+        allowFullscreen: true,
+        loaderOptions: {
+          unityLoaderUrl: "Build/BuildNow.loader.js",
+          unityConfigOptions: {
+            dataUrl: "Build/BuildNow.data",
+            frameworkUrl: "Build/BuildNow.framework.js",
+            codeUrl: "Build/BuildNow.wasm",
+          },
+        },
+      };
+      GameInit.load(options);
+      
+      // Mod Menu Functionality (For Testing)
+      let aimbotEnabled = false;
+      let flyEnabled = false;
+      let espEnabled = false;
+
+      document.getElementById('aimbotToggle').addEventListener('click', function() {
+        aimbotEnabled = !aimbotEnabled;
+        console.log("Aimbot " + (aimbotEnabled ? "Enabled" : "Disabled"));
+        // Here you would add actual aimbot functionality
+      });
+
+      document.getElementById('flyToggle').addEventListener('click', function() {
+        flyEnabled = !flyEnabled;
+        console.log("Fly Mode " + (flyEnabled ? "Enabled" : "Disabled"));
+        // Implement Fly Mode logic here
+      });
+
+      document.getElementById('espToggle').addEventListener('click', function() {
+        espEnabled = !espEnabled;
+        console.log("ESP " + (espEnabled ? "Enabled" : "Disabled"));
+        // Add ESP functionality for seeing through walls here
+      });
+    </script>
+  </body>
+</html>
