@@ -16,7 +16,7 @@
         <canvas id="canvas"></canvas>
       </div>
 
-      <div id="loadingBlock" class="">
+      <div id="loadingBlock">
         <!-- Loading screen area (fuzzy start) -->
         <div class="jss1 flex items-center justify-center bg-base-100 text-base-content">
           <div class="items-center justify-center gap-10 bg-base-200 p-5 rounded-xl shadow-md">
@@ -63,6 +63,14 @@
             </button>
           </div>
         </div>
+      </div>
+
+      <!-- Mod Menu (Injected here) -->
+      <div id="modMenu" class="hidden fixed top-10 right-10 bg-gray-800 text-white p-5 rounded-lg z-50">
+        <h3 class="text-lg mb-4">Mod Menu</h3>
+        <button id="aimbotButton" class="btn btn-primary w-full mb-2">Enable Aimbot</button>
+        <button id="flyButton" class="btn btn-primary w-full mb-2">Enable Fly</button>
+        <button id="espButton" class="btn btn-primary w-full">Enable ESP</button>
       </div>
 
       <!-- Hidden Jaz -->
